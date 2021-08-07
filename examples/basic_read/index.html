@@ -14,12 +14,21 @@
 
 	<body>
 		<script>
+			let tl;
+			let firstRun = true;
+
 			function setup() {
-				createCanvas(800, 800, WEBGL);
+				createCanvas(800, 600, WEBGL);
+				tl = TiltLoader.read("sketch.tilt");
 			}
 
 			function draw() {
-				background(random(255), 0, 0);
+				if (tl.ready && firstRun) {
+					for (let stroke of tl.strokes) {
+						console.log(stroke.positions.length);
+					}
+					firstRun = false;
+				}
 			}
 		</script>
 	</body>
