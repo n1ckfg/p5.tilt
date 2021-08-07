@@ -21,11 +21,11 @@
 
 			function setup() {
 				createCanvas(800, 600, WEBGL);
-				tl = TiltLoader.read("sketch.tilt");
+				tl = TiltLoader.read("Untitled_2.tilt");
 			}
 
 			function draw() {
-				background(100);
+				background(0);
 				orbitControl();
 
 				if (tl.ready) {
@@ -40,7 +40,7 @@
 					}
 
 					push();
-					translate(-80, 120, 300);
+					translate(15, 80, 280);
 					rotateX(radians(90));
 					rotateY(radians(90));
 					rotateZ(radians(90));

@@ -1,4 +1,8 @@
 "use strict";
+/*
+Tilt Brush reader for p5.js by @n1ckfg.
+Adapted from three.js TiltLoader.
+*/
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
@@ -81,12 +85,12 @@ class TiltLoader {
 		for (let i = 0; i < this.numStrokes; i++) {
 			const brushIndex = data.getInt32(offset, true);
 
-			const brushColor = [
-				data.getFloat32(offset + 4, true),
-				data.getFloat32(offset + 8, true),
-				data.getFloat32(offset + 12, true),
-				data.getFloat32(offset + 16, true)
-			];
+			let r = data.getFloat32(offset + 4, true) * 255;
+			let g = data.getFloat32(offset + 8, true) * 255;
+			let b = data.getFloat32(offset + 12, true) * 255;
+			let a = data.getFloat32(offset + 16, true) * 255;
+
+			const brushColor = color(r, g, b, a);
 
 			const brushSize = data.getFloat32(offset + 20, true);
 			const strokeMask = data.getUint32(offset + 24, true);
@@ -101,26 +105,27 @@ class TiltLoader {
 				if ((controlPointMask & byte) > 0) offsetControlPointMask += 4;
 			}
 
-			offset = offset + 28 + offsetStrokeMask + 4; 
+			offset += 28 + offsetStrokeMask + 4; 
 
 			const numControlPoints = data.getInt32(offset, true);
 
-			const positions = new Float32Array(numControlPoints * 3);
-			//const quaternions = new Float32Array(numControlPoints * 4);
+			let positions = []; //new Float32Array(numControlPoints * 3);
+			//let quaternions = []; //new Float32Array(numControlPoints * 4);
 
-			offset = offset + 4;
+			offset += 4;
 
-			for (let j = 0, k = 0; j < positions.length; j += 3, k += 4) {
-				positions[j + 0] = data.getFloat32(offset + 0, true);
-				positions[j + 1] = data.getFloat32(offset + 4, true);
-				positions[j + 2] = data.getFloat32(offset + 8, true);
+			for (let j = 0; j < numControlPoints; j++) {
+				let x = data.getFloat32(offset + 0, true);
+				let y = data.getFloat32(offset + 4, true);
+				let z = data.getFloat32(offset + 8, true);
+				positions.push(createVector(x, y, z));
 
-				//quaternions[k + 0] = data.getFloat32(offset + 12, true);
-				//quaternions[k + 1] = data.getFloat32(offset + 16, true);
-				//quaternions[k + 2] = data.getFloat32(offset + 20, true);
-				//quaternions[k + 3] = data.getFloat32(offset + 24, true);
+				//qw = data.getFloat32(offset + 12, true);
+				//qx = data.getFloat32(offset + 16, true);
+				//qy = data.getFloat32(offset + 20, true);
+				//qz = data.getFloat32(offset + 24, true);
 
-				offset = offset + 28 + offsetControlPointMask; 
+				offset += 28 + offsetControlPointMask; 
 			}
 
 			let tiltStroke = new TiltStroke(positions, brushSize, brushColor);
