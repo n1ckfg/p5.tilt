@@ -1,4 +1,4 @@
-tiltp5
+p5.tilt
 Tilt Brush reader for p5.js
    
 Copyright (c) 2021 Nick Fox-Gieg
